@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis 15 Años - María Elizabeth</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --burgundy-deep: #4a0011;
+      --burgundy: #7a0c2e;
+      --rose-gold: #c58b95;
+      --gold: #d4af37;
+      --gold-light: #f9e8a2;
+      --text-dark: #2b2b2b;
+      --text-muted: #555555;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: radial-gradient(circle at center, #2e030e 0%, #0a0104 100%);
+      color: var(--text-dark);
+      overflow-x: hidden;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Canvas de Destellos de Fondo */
+    #fx-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Reproductor de Música */
+    .music-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 90;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid var(--gold);
+      border-radius: 50px;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      cursor: pointer;
+    }
+
+    .music-icon {
+      width: 30px;
+      height: 30px;
+      background: var(--burgundy);
+      color: var(--gold-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    /* Contenedor Principal de la Tarjeta */
+    .main-container {
+      max-width: 650px;
+      margin: 30px auto;
+      padding: 0 15px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card-body {
+      background: #ffffff;
+      border-radius: 28px;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.6);
+      padding: 60px 25px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border: 3px solid var(--gold);
+    }
+
+    /* MARCOS FLORALES BOTÁNICOS EN LAS ESQUINAS */
+    .floral-corner {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0.95;
+    }
+
+    .corner-top-left {
+      top: 0;
+      left: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath fill='%237a0c2e' d='M0 0c60 0 120 40 140 100C100 80 40 60 0 0z'/%3E%3Ccircle cx='40' cy='40' r='25' fill='%23a31c3f'/%3E%3Ccircle cx='70' cy='30' r='18' fill='%23c58b95'/%3E%3Ccircle cx='30' cy='70' r='18' fill='%23d4af37' opacity='0.7'/%3E%3Cpath fill='%234a0011' d='M0 90c30-10 60-30 80-60-20 40-50 60-80 60z'/%3E%3C/svg%3E");
+    }
+
+    .corner-top-right {
+      top: 0;
+      right: 0;
+      transform: scaleX(-1);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath fill='%237a0c2e' d='M0 0c60 0 120 40 140 100C100 80 40 60 0 0z'/%3E%3Ccircle cx='40' cy='40' r='25' fill='%23a31c3f'/%3E%3Ccircle cx='70' cy='30' r='18' fill='%23c58b95'/%3E%3Ccircle cx='30' cy='70' r='18' fill='%23d4af37' opacity='0.7'/%3E%3Cpath fill='%234a0011' d='M0 90c30-10 60-30 80-60-20 40-50 60-80 60z'/%3E%3C/svg%3E");
+    }
+
+    .corner-bottom-left {
+      bottom: 0;
+      left: 0;
+      transform: scaleY(-1);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath fill='%237a0c2e' d='M0 0c60 0 120 40 140 100C100 80 40 60 0 0z'/%3E%3Ccircle cx='40' cy='40' r='25' fill='%23a31c3f'/%3E%3Ccircle cx='70' cy='30' r='18' fill='%23c58b95'/%3E%3Ccircle cx='30' cy='70' r='18' fill='%23d4af37' opacity='0.7'/%3E%3Cpath fill='%234a0011' d='M0 90c30-10 60-30 80-60-20 40-50 60-80 60z'/%3E%3C/svg%3E");
+    }
+
+    .corner-bottom-right {
+      bottom: 0;
+      right: 0;
+      transform: scale(-1, -1);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath fill='%237a0c2e' d='M0 0c60 0 120 40 140 100C100 80 40 60 0 0z'/%3E%3Ccircle cx='40' cy='40' r='25' fill='%23a31c3f'/%3E%3Ccircle cx='70' cy='30' r='18' fill='%23c58b95'/%3E%3Ccircle cx='30' cy='70' r='18' fill='%23d4af37' opacity='0.7'/%3E%3Cpath fill='%234a0011' d='M0 90c30-10 60-30 80-60-20 40-50 60-80 60z'/%3E%3C/svg%3E");
+    }
+
+    .inner-gold-border {
+      position: absolute;
+      inset: 12px;
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .header-tag {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--rose-gold);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .script-title {
+      font-family: 'Alex Brush', cursive;
+      font-size: 80px;
+      color: var(--burgundy);
+      line-height: 0.95;
+      margin-bottom: 10px;
+    }
+
+    .person-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      letter-spacing: 3px;
+      color: var(--burgundy-deep);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 25px;
+    }
+
+    .poem-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 17px;
+      line-height: 1.8;
+      color: #333333;
+      max-width: 480px;
+      margin: 0 auto 30px;
+    }
+
+    .ornament-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin: 30px 0;
+    }
+
+    .line {
+      height: 1px;
+      width: 70px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .diamond {
+      width: 7px;
+      height: 7px;
+      background: var(--gold);
+      transform: rotate(45deg);
+    }
+
+    /* Familia y Padrinos */
+    .family-box {
+      background: #faf2f4;
+      border-radius: 16px;
+      padding: 22px 15px;
+      margin: 20px 0;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .family-label {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--burgundy);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .family-names {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      color: var(--burgundy-deep);
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    /* Reloj Regresivo */
+    .timer-card {
+      background: linear-gradient(135deg, var(--burgundy-deep) 0%, #1f0007 100%);
+      color: #fff;
+      border-radius: 18px;
+      padding: 25px 10px;
+      margin: 35px 0;
+      border: 2px solid var(--gold);
+      box-shadow: 0 10px 30px rgba(74, 0, 17, 0.35);
+    }
+
+    .timer-header {
+      font-family: 'Cinzel', serif;
+      color: var(--gold-light);
+      font-size: 11px;
+      letter-spacing: 3px;
+      margin-bottom: 18px;
+    }
+
+    .timer-grid {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .timer-box {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--gold);
+      padding: 10px 12px;
+      border-radius: 10px;
+      min-width: 65px;
+    }
+
+    .timer-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+
+    .timer-lbl {
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #dfc5cd;
+      margin-top: 2px;
+    }
+
+    /* Bloques de Eventos */
+    .event-block {
+      background: #ffffff;
+      border: 1px solid #f0e2e5;
+      border-radius: 16px;
+      padding: 25px 15px;
+      margin: 25px 0;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.04);
+    }
+
+    .event-type {
+      font-family: 'Cinzel', serif;
+      font-size: 17px;
+      color: var(--burgundy);
+      margin-bottom: 8px;
+    }
+
+    .event-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    /* Botones Interactivos */
+    .btn-action {
+      display: inline-block;
+      padding: 14px 30px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-deep) 100%);
+      color: var(--gold-light);
+      border: 1px solid var(--gold);
+      box-shadow: 0 5px 15px rgba(122, 12, 46, 0.25);
+    }
+
+    .btn-whatsapp {
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: #ffffff;
+      font-size: 13px;
+      padding: 16px 36px;
+      margin-top: 15px;
+      box-shadow: 0 5px 20px rgba(37, 211, 102, 0.3);
+    }
+
+    .footer-script {
+      font-family: 'Alex Brush', cursive;
+      font-size: 55px;
+      color: var(--burgundy);
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="fx-canvas"></canvas>
+
+  <audio id="bg-music" loop preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8716b68.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Botón de Música -->
+  <div class="music-widget" onclick="toggleMusic()">
+    <div class="music-icon" id="music-icon">🎵</div>
+    <span style="font-size: 11px; font-weight: 600; color: var(--burgundy); letter-spacing: 1px;">MÚSICA</span>
+  </div>
+
+  <!-- Tarjeta de Invitación Directa -->
+  <div class="main-container">
+    <div class="card-body">
+      <div class="floral-corner corner-top-left"></div>
+      <div class="floral-corner corner-top-right"></div>
+      <div class="floral-corner corner-bottom-left"></div>
+      <div class="floral-corner corner-bottom-right"></div>
+      <div class="inner-gold-border"></div>
+
+      <div class="header-tag">Te Invito Cordialmente A Mis</div>
+      <div class="script-title">15 Años</div>
+      <div class="person-name">María Elizabeth</div>
+
+      <p class="poem-text">
+        Dejo atrás la niñez con mucha gratitud y recibo esta etapa con entusiasmo, lista para aprender, asumir nuevos retos y construir mis propios sueños con determinación.<br><br>
+        Por eso con gran alegría me gustaría contar con tu presencia.
+      </p>
+
+      <div class="ornament-divider">
+        <div class="line"></div>
+        <div class="diamond"></div>
+        <div class="line"></div>
+      </div>
+
+      <!-- Padres -->
+      <div class="family-box">
+        <div class="family-label">Con el amor de mis padres</div>
+        <div class="family-names">María Del Rosario <br>&<br> Eduardo Ramos</div>
+      </div>
+
+      <!-- Padrinos -->
+      <div class="family-box">
+        <div class="family-label">Y el apoyo de mis padrinos</div>
+        <div class="family-names">Roberto Esparza <br>&<br> Liliana Pérez</div>
+      </div>
+
+      <!-- Contador Regresivo -->
+      <div class="timer-card">
+        <div class="timer-header">Faltan Para La Gran Celebración</div>
+        <div class="timer-grid">
+          <div class="timer-box">
+            <div class="timer-val" id="days">00</div>
+            <div class="timer-lbl">Días</div>
+          </div>
+          <div class="timer-box">
+            <div class="timer-val" id="hours">00</div>
+            <div class="timer-lbl">Horas</div>
+          </div>
+          <div class="timer-box">
+            <div class="timer-val" id="minutes">00</div>
+            <div class="timer-lbl">Min</div>
+          </div>
+          <div class="timer-box">
+            <div class="timer-val" id="seconds">00</div>
+            <div class="timer-lbl">Seg</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ceremonia Religiosa -->
+      <div class="event-block">
+        <div class="event-type">Ceremonia Religiosa</div>
+        <div class="event-desc">
+          <strong>Sábado 21 de Noviembre</strong><br>
+          Hora: 1:00 PM<br>
+          Iglesia San José Obrero
+        </div>
+        <a class="btn-action btn-gold" href="https://maps.app.goo.gl/g2vDTqcwtGVuUGQG8?g_st=aw" target="_blank" rel="noopener noreferrer">Ubicación de la Iglesia</a>
+      </div>
+
+      <!-- Recepción -->
+      <div class="event-block">
+        <div class="event-type">Recepción</div>
+        <div class="event-desc">
+          <strong>Salón Dieguez</strong><br>
+          Solidaridad 185, San Javier, 45307 Tala, Jal.<br>
+          Hora: 3:00 PM
+        </div>
+        <a class="btn-action btn-gold" href="https://maps.app.goo.gl/b8qKSS7mWjatkYhi6" target="_blank" rel="noopener noreferrer">Ubicación del Salón</a>
+      </div>
+
+      <div class="ornament-divider">
+        <div class="line"></div>
+        <div class="diamond"></div>
+        <div class="line"></div>
+      </div>
+
+      <!-- Confirmación WhatsApp -->
+      <div style="margin-top: 30px;">
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--burgundy-deep); font-weight: 700;">Confirmación de Asistencia</div>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">Favor de confirmar tu compañía por WhatsApp</p>
+        <a class="btn-action btn-whatsapp" href="https://wa.me/+523324866159?text=%C2%A1Hola%2C%20confirmo%20asistencia%20de%20los%2015%20a%C3%B1os%20de%20Mar%C3%ADa%20Elizabeth%20%F0%9F%98%81!" target="_blank" rel="noopener noreferrer">Confirmar por WhatsApp</a>
+      </div>
+
+      <div class="footer-script">¡Te Esperamos!</div>
+    </div>
+  </div>
+
+  <script>
+    function updateCountdown() {
+      const eventDate = new Date("November 21, 2026 13:00:00").getTime();
+      const now = new Date().getTime();
+      const diff = eventDate - now;
+
+      if (diff > 0) {
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById("days").innerText = d < 10 ? "0" + d : d;
+        document.getElementById("hours").innerText = h < 10 ? "0" + h : h;
+        document.getElementById("minutes").innerText = m < 10 ? "0" + m : m;
+        document.getElementById("seconds").innerText = s < 10 ? "0" + s : s;
+      }
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    let isPlaying = false;
+    const music = document.getElementById("bg-music");
+
+    function toggleMusic() {
+      if (isPlaying) {
+        music.pause();
+        isPlaying = false;
+        document.getElementById("music-icon").innerText = "🔇";
+      } else {
+        music.play();
+        isPlaying = true;
+        document.getElementById("music-icon").innerText = "🎵";
+      }
+    }
+
+    const canvas = document.getElementById('fx-canvas');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
+
+    const particles = Array.from({ length: 35 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      size: Math.random() * 4 + 2,
+      speedY: Math.random() * 0.7 + 0.3,
+      speedX: Math.random() * 0.4 - 0.2,
+      color: Math.random() > 0.3 ? '#7a0c2e' : '#d4af37',
+      opacity: Math.random() * 0.6 + 0.3
+    }));
+
+    function animateFX() {
+      ctx.clearRect(0, 0, w, h);
+      particles.forEach(p => {
+        p.y += p.speedY;
+        p.x += p.speedX;
+
+        if (p.y > h) {
+          p.y = -10;
+          p.x = Math.random() * w;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.opacity;
+        ctx.fill();
+      });
+      requestAnimationFrame(animateFX);
+    }
+    animateFX();
+  </script>
+</body>
+</html>
